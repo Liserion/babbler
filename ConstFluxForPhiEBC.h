@@ -6,8 +6,8 @@
 
 class ConstFluxForPhiEBC;
 
-template <>
-InputParameters validParams<ConstFluxForPhiEBC>();
+InputParameters
+ConstFluxForCeBC::validParams();
 
 class ConstFluxForPhiEBC:public IntegratedBC
 {

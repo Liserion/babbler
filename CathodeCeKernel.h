@@ -1,5 +1,4 @@
-// Adapted to new format by [Your Name], [Date]
-#pragma once
+
 
 #include "Kernel.h"
 

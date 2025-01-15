@@ -6,8 +6,8 @@
 
 class ConstFluxForPhiSBC;
 
-template <>
-InputParameters validParams<ConstFluxForPhiSBC>();
+InputParameters
+ConstFluxForPhiSBC::validParams()
 
 class ConstFluxForPhiSBC:public IntegratedBC
 {

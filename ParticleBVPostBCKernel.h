@@ -2,21 +2,16 @@
 
 #pragma once
 
-//
-// Created by by on 24.10.18.
-//
-
-
-
 
 
 
 #include "IntegratedBC.h"
 
 class ParticleBVPostBCKernel;
+class ParticleBVPostBCKernel;
 
-template <>
-InputParameters validParams<ParticleBVPostBCKernel>();
+InputParameters
+ParticleBVPostBCKernel::validParams()
 
 class ParticleBVPostBCKernel:public IntegratedBC
 {
