@@ -5,8 +5,8 @@
 
 registerMooseObject("BabblerApp", ConstFluxForPhiSBC);
 
-template <>
-InputParameters validParams<ConstFluxForPhiSBC>()
+InputParameters
+ConstFluxForPhiSBC::validParams()
 {
     InputParameters params=IntegratedBCBase::validParams();
 
