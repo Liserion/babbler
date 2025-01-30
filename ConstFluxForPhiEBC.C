@@ -10,8 +10,8 @@ ConstFluxForPhiEBC::validParams()
 {
     InputParameters params = IntegratedBCBase::validParams();
 
-    params.addRequiredParam<Real>("I", "current");
-    params.addParam<Real>("ChargeTime", 0.0, "0->forever,>=0 for charge time");
+    params.addRequiredParam<Real>("I","current");
+    params.addParam<Real>("ChargeTime",0.0,"0->forever,>=0 for charge time");
 
     return params;
 }

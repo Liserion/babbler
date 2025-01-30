@@ -1,8 +1,11 @@
 #pragma once
 
-#include "IntegratedBC.h"  // Ensure all dependencies are included here
+#include "IntegratedBC.h" 
 
-class ConstFluxForCeBC : public IntegratedBC
+InputParameters
+ConstFluxForCeBC::validParams()
+
+class ConstFluxForCeBC:public IntegratedBC
 {
 public:
     ConstFluxForCeBC(const InputParameters &parameters);

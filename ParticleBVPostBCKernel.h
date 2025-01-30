@@ -8,7 +8,6 @@
 #include "IntegratedBC.h"
 
 class ParticleBVPostBCKernel;
-class ParticleBVPostBCKernel;
 
 InputParameters
 ParticleBVPostBCKernel::validParams()

@@ -1,8 +1,4 @@
-//created by Armin 29.10.2020
 
-//
-// Created by by on 24.10.18.
-//
 
 #include "ParticleBVPostBCKernel.h"
 
