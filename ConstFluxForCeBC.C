@@ -4,8 +4,8 @@
 
 registerMooseObject("BabblerApp", ConstFluxForCeBC);
 
-template <>
-InputParameters validParams<ConstFluxForCeBC>()
+InputParameters 
+ConstFluxForCeBC::validParams()
 {
     InputParameters params=IntegratedBCBase::validParams();
 
