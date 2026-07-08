@@ -1,45 +1,34 @@
-//created by Armin 29.10.2020
-
 #pragma once
-
-
-
 
 #include "IntegratedBC.h"
 
-class ParticleBVPostBCKernel;
-
-//InputParameters
-//ParticleBVPostBCKernel::validParams()
-
-class ParticleBVPostBCKernel:public IntegratedBC
+class ParticleBVPostBCKernel : public IntegratedBC
 {
 public:
-  ParticleBVPostBCKernel(const InputParameters & parameters);
   static InputParameters validParams();
+  ParticleBVPostBCKernel(const InputParameters & parameters);
 
 protected:
-    virtual Real computeQpResidual() override ;
-    virtual Real computeQpJacobian() override ;
-  PostprocessorName _pps_c2;
-  PostprocessorName _pps_phi1;
-  PostprocessorName _pps_phi2;
-  Real _c2_value;
-  Real _phi1_value;
-  Real _phi2_value;
-  Real _K2;
-  Real _Cm;
-  Real _T;
-  int _MateChoice;
-     Real J,dJdc;
+  virtual Real computeQpResidual() override;
+  virtual Real computeQpJacobian() override;
 
+  const PostprocessorName & _pps_c2;
+  const PostprocessorName & _pps_phi1;
+  const PostprocessorName & _pps_phi2;
 
-     Real Sech(const Real &x)
-    {
-        return 2.0/(exp(x)+exp(-x));
-    }
+  const Real & _K2;
+  const Real & _Cm;
+  const Real & _T;
+  const int & _MateChoice;
 
-    void OpenCircuitV(const Real &x,Real &u,Real &dudx);
-    void BV(const Real &c,const Real &phi1,const Real &phi2,
-             const Real &cs,Real &J,Real &dJdc);
+  Real J, dJdc;
+
+  Real Sech(const Real & x)
+  {
+    return 2.0 / (exp(x) + exp(-x));
+  }
+
+  void OpenCircuitV(const Real & x, Real & u, Real & dudx);
+  void BV(const Real & c, const Real & phi1, const Real & phi2,
+          const Real & cs, Real & J, Real & dJdc);
 };

@@ -5,16 +5,12 @@
 class SeparatorPhiSKernel : public Kernel
 {
 public:
-    SeparatorPhiSKernel(const InputParameters &parameters);
-    static InputParameters validParams();
+  static InputParameters validParams();
+  SeparatorPhiSKernel(const InputParameters & parameters);
 
 protected:
-    virtual Real computeQpResidual() override ;
-    virtual Real computeQpJacobian() override ;
-    //virtual Real computeQpOffDiagJacobian(unsigned int jvar) override ;
+  virtual Real computeQpResidual() override;
+  virtual Real computeQpJacobian() override;
 
-    const Real &_Sigma;
+  const Real & _Sigma;
 };
-
-
-

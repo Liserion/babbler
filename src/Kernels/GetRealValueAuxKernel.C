@@ -1,8 +1,6 @@
-
 #include "GetRealValueAuxKernel.h"
-registerMooseObject("babblerApp",GetRealValueAuxKernel);
 
-
+registerMooseObject("babblerApp", GetRealValueAuxKernel);
 
 InputParameters
 GetRealValueAuxKernel::validParams()
@@ -13,7 +11,7 @@ GetRealValueAuxKernel::validParams()
   return params;
 }
 
-GetRealValueAuxKernel::GetRealValueAuxKernel(const InputParameters &parameters)
+GetRealValueAuxKernel::GetRealValueAuxKernel(const InputParameters & parameters)
   : AuxKernel(parameters),
     _input_dof(coupledValue("dof")),
     _FactorValue(getParam<Real>("CoefFactor"))
@@ -25,4 +23,3 @@ GetRealValueAuxKernel::computeValue()
 {
   return _FactorValue * _input_dof[_qp];
 }
-
