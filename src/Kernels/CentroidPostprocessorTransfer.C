@@ -51,17 +51,31 @@ CentroidPostprocessorTransfer::execute()
   const auto sys_num = sys.number();
   const auto var_num = var.number();
 
-  unsigned int n_written = 0, n_nolocate = 0, n_offproc = 0;
-  Real vmin = std::numeric_limits<Real>::max();
-  Real vmax = -std::numeric_limits<Real>::max();
-
+  // Gather (position, value) pairs from ALL ranks: some MOOSE versions
+  // distribute CentroidMultiApp sub-apps by index, not by element ownership,
+  // so the app and its element can live on different ranks.
+  std::vector<Real> packed;
   for (unsigned int i = 0; i < getFromMultiApp()->numGlobalApps(); ++i)
   {
     if (!getFromMultiApp()->hasLocalApp(i))
       continue;
-
     const Real value = getFromMultiApp()->appPostprocessorValue(i, _pp_name);
     const Point & pos = getFromMultiApp()->position(i);
+    packed.push_back(pos(0));
+    packed.push_back(pos(1));
+    packed.push_back(pos(2));
+    packed.push_back(value);
+  }
+  _communicator.allgather(packed, false);
+
+  unsigned int n_written = 0, n_nolocate = 0;
+  Real vmin = std::numeric_limits<Real>::max();
+  Real vmax = -std::numeric_limits<Real>::max();
+
+  for (std::size_t k = 0; k + 3 < packed.size(); k += 4)
+  {
+    const Point pos(packed[k], packed[k + 1], packed[k + 2]);
+    const Real value = packed[k + 3];
 
     const Elem * elem = (*locator)(pos);
     if (!elem)
@@ -70,10 +84,7 @@ CentroidPostprocessorTransfer::execute()
       continue;
     }
     if (elem->processor_id() != processor_id())
-    {
-      n_offproc++;
-      continue;
-    }
+      continue; // another rank owns it and will write it
 
     if (elem->n_dofs(sys_num, var_num) < 1)
       mooseError("CentroidPostprocessorTransfer: variable '", _var_name,
@@ -89,8 +100,7 @@ CentroidPostprocessorTransfer::execute()
   solution.close();
   sys.update();
 
-  _console << "CentroidPostprocessorTransfer(" << name() << "): wrote " << n_written
-           << " values [" << vmin << ", " << vmax << "], skipped " << n_nolocate
-           << " unlocated / " << n_offproc << " off-proc (rank " << processor_id() << ")"
-           << std::endl;
+  std::cerr << "CentroidPostprocessorTransfer(" << name() << ") rank " << processor_id()
+            << ": wrote " << n_written << " of " << packed.size() / 4 << " gathered, range ["
+            << vmin << ", " << vmax << "], unlocated " << n_nolocate << std::endl;
 }
