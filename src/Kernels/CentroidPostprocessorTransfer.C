@@ -51,6 +51,10 @@ CentroidPostprocessorTransfer::execute()
   const auto sys_num = sys.number();
   const auto var_num = var.number();
 
+  unsigned int n_written = 0, n_nolocate = 0, n_offproc = 0;
+  Real vmin = std::numeric_limits<Real>::max();
+  Real vmax = -std::numeric_limits<Real>::max();
+
   for (unsigned int i = 0; i < getFromMultiApp()->numGlobalApps(); ++i)
   {
     if (!getFromMultiApp()->hasLocalApp(i))
@@ -60,8 +64,16 @@ CentroidPostprocessorTransfer::execute()
     const Point & pos = getFromMultiApp()->position(i);
 
     const Elem * elem = (*locator)(pos);
-    if (!elem || elem->processor_id() != processor_id())
+    if (!elem)
+    {
+      n_nolocate++;
       continue;
+    }
+    if (elem->processor_id() != processor_id())
+    {
+      n_offproc++;
+      continue;
+    }
 
     if (elem->n_dofs(sys_num, var_num) < 1)
       mooseError("CentroidPostprocessorTransfer: variable '", _var_name,
@@ -69,8 +81,16 @@ CentroidPostprocessorTransfer::execute()
 
     const dof_id_type dof = elem->dof_number(sys_num, var_num, 0);
     solution.set(dof, value);
+    n_written++;
+    vmin = std::min(vmin, value);
+    vmax = std::max(vmax, value);
   }
 
   solution.close();
   sys.update();
+
+  _console << "CentroidPostprocessorTransfer(" << name() << "): wrote " << n_written
+           << " values [" << vmin << ", " << vmax << "], skipped " << n_nolocate
+           << " unlocated / " << n_offproc << " off-proc (rank " << processor_id() << ")"
+           << std::endl;
 }
