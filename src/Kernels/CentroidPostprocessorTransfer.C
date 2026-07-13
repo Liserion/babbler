@@ -39,7 +39,7 @@ CentroidPostprocessorTransfer::CentroidPostprocessorTransfer(const InputParamete
 void
 CentroidPostprocessorTransfer::execute()
 {
-  FEProblemBase & problem = getToMultiApp()->problemBase();
+  FEProblemBase & problem = getFromMultiApp()->problemBase();
   MooseVariableFieldBase & var = problem.getVariable(0, _var_name);
   SystemBase & sys = var.sys();
   NumericVector<Number> & solution = sys.solution();
